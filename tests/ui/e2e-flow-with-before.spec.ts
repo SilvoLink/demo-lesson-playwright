@@ -14,7 +14,7 @@ test('signIn button disabled when incorrect data inserted', async ({}) => {
   // implement methods from base page
   await authPage.usernameField.fill(faker.lorem.word(2))
   await authPage.passwordField.fill(faker.lorem.word(7))
-  await expect(authPage.signInButton).toBeDisabled()
+  await expect.soft(authPage.signInButton).toBeDisabled()
 })
 
 test('error message displayed when incorrect credentials used', async ({}) => {
@@ -23,7 +23,7 @@ test('error message displayed when incorrect credentials used', async ({}) => {
 
 test('login with correct credentials and verify order creation page', async ({}) => {
   const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
-  await expect(orderCreationPage.statusButton).toBeVisible()
+  await expect.soft(orderCreationPage.statusButton).toBeVisible()
   // verify at least few elements on the order creation page
 })
 
@@ -31,13 +31,17 @@ test('login and create order', async ({}) => {
   // implement test
 })
 
-test('verify language at auth page', async ({}) => {
-  await authPage.verifyLanguageSelector()
-  // add footer verifications
+test('verify footer at auth page', async ({}) => {
+  await authPage.verifyFooterElements()
 })
 
-test('verify language at order page', async ({}) => {
+test('verify footer at order page', async ({}) => {
   const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
-  await orderCreationPage.verifyLanguageSelector()
-  // add footer verifications
+  await orderCreationPage.verifyFooterElements()
+})
+
+test('verify order not found page', async ({}) => {
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  const orderNotFoundPage = await orderCreationPage.fillOrderIdAndSearch('111111')
+  await expect.soft(orderNotFoundPage.orderNotFoundContainer).toBeVisible()
 })
