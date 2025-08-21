@@ -15,6 +15,45 @@ test('login with correct credentials and verify order creation page', async ({ p
   const authPage = new LoginPage(page)
   await authPage.open()
   const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
-  await orderCreationPage.statusButton.click({ force: true })
-  // verify at least few elements on the order creation page
+  await expect(orderCreationPage.logoutButton).toBeVisible()
+  await expect(orderCreationPage.orderCreationButton).toBeVisible()
+})
+
+test('login and create order successfully', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.usernameInput.fill('test-customer-name')
+  await orderCreationPage.phoneInput.fill('55443322')
+  await orderCreationPage.commentInput.fill('test-comment')
+  await orderCreationPage.orderCreationButton.click()
+  await expect(orderCreationPage.orderCreatedOkButton).toBeVisible()
+})
+
+test('login and logout', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.logoutButton.click()
+  await expect(authPage.signInButton).toBeVisible()
+})
+
+test('login and check order creation disabled when phone not filled', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.usernameInput.fill('12')
+  await expect(orderCreationPage.orderCreationButton).toBeDisabled()
+})
+
+test('login and check phone validation error when phone number is not correct', async ({
+  page,
+}) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.usernameInput.fill('12')
+  await orderCreationPage.phoneInput.fill('12345')
+  await expect(orderCreationPage.phoneInputError).toBeVisible()
+  await expect(orderCreationPage.orderCreationButton).toBeDisabled()
 })
