@@ -46,7 +46,9 @@ test('login and check order creation disabled when phone not filled', async ({ p
   await expect(orderCreationPage.orderCreationButton).toBeDisabled()
 })
 
-test('login and check phone validation error when phone number is not correct', async ({ page }) => {
+test('login and check phone validation error when phone number is not correct', async ({
+  page,
+}) => {
   const authPage = new LoginPage(page)
   await authPage.open()
   const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
