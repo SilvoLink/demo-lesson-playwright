@@ -3,7 +3,6 @@ import { Locator, Page } from '@playwright/test'
 export class OrderPage {
   readonly page: Page
   readonly statusButton: Locator
-  // add more locators here
   readonly logoutButton: Locator
   readonly orderCreationButton: Locator
   readonly usernameInput: Locator
